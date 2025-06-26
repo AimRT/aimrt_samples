@@ -8,6 +8,6 @@ English | [中文](README.zh_CN.md)
 
 ## Sample List
 
-| Sample     | Description                                               | Level  |
-| :--------- | :-------------------------------------------------------- | :----- |
-| helloworld | A simple example demonstrating how to use AimRT framework | :star: |
+| Sample                   | Description                                               | Level  |
+| :----------------------- | :-------------------------------------------------------- | :----- |
+| helloworld(./helloworld) | A simple example demonstrating how to use AimRT framework | :star: |
