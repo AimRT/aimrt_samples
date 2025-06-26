@@ -9,7 +9,7 @@
 ## 运行
 
 ```
-cd build/bin
+cd build
 ./start_helloworld.sh
 ```
 
@@ -34,9 +34,10 @@ cd build/bin
     │       └── main.cc # 主函数
     ├── CMakeLists.txt
     ├── install
-    │   ├── cfg # 配置文件
-    │   │   └── helloworld_cfg.yaml
-    │   └── start_helloworld.sh # 启动脚本
+    │   └── bin
+    │       ├── cfg # 配置文件
+    │       │   └── helloworld_cfg.yaml
+    │       └── start_helloworld.sh # 启动脚本
     └── module # 业务模块
         └── helloworld_module
             ├── CMakeLists.txt
