@@ -1,0 +1,20 @@
+# AimRT core configuration
+aimrt:
+  log: # log configuration
+    core_lvl: INFO # core log level, options: Trace/Debug/Info/Warn/Error/Fatal/Off, case-insensitive
+    backends: # log backends
+      - type: console #  logbackend type, options: console | rotating_file
+        options:
+          color: true # colored print
+
+  module: # 模块配置
+    modules: # 模块
+      - name: MyNormalChannelModule # 模块Name接口返回的名称
+        log_lvl: INFO # 模块日志级别
+
+# Custom module configuration
+# the framework will generate a temporary configuration file for each module,
+# and the developer can get the configuration file path through the Configurator interface.
+HelloWorldModule:
+  key1: val1
+  key2: val2
