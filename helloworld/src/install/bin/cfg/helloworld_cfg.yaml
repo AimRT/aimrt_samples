@@ -1,0 +1,21 @@
+# AimRT core configuration
+aimrt:
+  log: # log configuration
+    core_lvl: INFO # core log level, options: Trace/Debug/Info/Warn/Error/Fatal/Off, case-insensitive
+    backends: # log backends
+      - type: console #  print to console
+        options:
+          color: true # colored print
+      - type: rotate_file # print to file and rotate
+        options:
+          path: ./log # log file path
+          filename: helloworld.log # log file name
+          max_file_size_m: 4 # log file max size, unit: MB
+          max_file_num: 10 # max log file num, 0 means unlimited
+
+# Custom module configuration
+# the framework will generate a temporary configuration file for each module,
+# and the developer can get the configuration file path through the Configurator interface.
+HelloWorldModule:
+  key1: val1
+  key2: val2
