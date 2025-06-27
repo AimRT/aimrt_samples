@@ -1,12 +1,12 @@
 # helloword
 
-## 构建
+## 构建和安装 (Build and Install)
 
 ```
 ./build.sh
 ```
 
-## 运行
+## 运行 (Run)
 
 ```
 cd build
