@@ -10,7 +10,7 @@ aimrt:
       - type: rotate_file # print to file and rotate
         options:
           path: ./log # log file path
-          filename: my_pb_channel.log # log file name
+          filename: my_pb_rpc.log # log file name
           max_file_size_m: 4 # log file max size, unit: MB
           max_file_num: 10 # max log file num, 0 means unlimited
   executor: # executor configuration
@@ -19,25 +19,26 @@ aimrt:
         type: asio_thread
         options:
           thread_num: 2 # thread num
-  channel: # channel configuration
-    backends: # channel backends
+      - name: timeout_handle # name
+        type: time_wheel
+        options:
+          bind_executor: work_thread_pool
+  rpc: # rpc configuration
+    backends: # rpc backends
       - type: local # use local backend
         options:
-          subscriber_use_inline_executor: false # not use inline executor in subscriber
-          subscriber_executor: work_thread_pool # executor your callback function in subscriber_executor(must be created in executor section)
-    pub_topics_options: # publish endpoint options
-      - topic_name: "(.*)" # select some topic (support regex)
-        enable_backends: [local] # this topic be configured to use local backend only
-    sub_topics_options: # publish endpoint options
-      - topic_name: "(.*)" # select some topic (support regex)
-        enable_backends: [local] # this topic be configured to use local backend only
+          timeout_executor: timeout_handle # set timeout executor
+    clients_options: # client endpoint options
+      - func_name: "(.*)" # select some function (support regex)
+        enable_backends: [local]
+    servers_options: # server endpoint options
+      - func_name: "(.*)" # select some function (support regex)
+        enable_backends: [local]
 
 # Custom module configuration
 # the framework will generate a temporary configuration file for each module,
 # and the developer can get the configuration file path through the Configurator interface.
-NormalPublisherModule:
-  topic_name: "example/test_topic"
-  channel_frq: 1
+NormalRpcClientModule:
+  rpc_frq: 1
 
-NormalSubscriberModule:
-  topic_name: "example/test_topic"
+NormalRpcServerModule:

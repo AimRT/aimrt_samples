@@ -1,0 +1,30 @@
+// Copyright (c) 2023, AgiBot Inc.
+// All rights reserved.
+
+syntax = "proto3";
+
+// package name for specifying the namespace for generated code
+package aimrt_samples.protocols;
+
+// request message: contains two operands for calculation
+message CalculateSumReq {
+  double num1 = 1;
+  double num2 = 2;
+}
+
+// response message: contains the result of the calculation
+message CalculateSumRsp {
+  Status status = 1;  // Status
+  double sum = 2;     // Calculation result
+}
+
+message Status {
+  uint64 code = 1;  // Status code (0 for success)
+  string msg = 2;   // Status message
+}
+
+service CalculationService {
+  rpc CalculateSum(CalculateSumReq) returns (CalculateSumRsp);
+  // other RPC methods can be added here
+  // ...
+}
