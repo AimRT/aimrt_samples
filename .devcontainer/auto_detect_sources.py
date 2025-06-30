@@ -9,6 +9,8 @@ import shutil
 from pathlib import Path
 
 # color output
+
+
 class Colors:
     GREEN = '\033[0;32m'
     BLUE = '\033[0;34m'
@@ -17,20 +19,26 @@ class Colors:
     RED = '\033[0;31m'
     NC = '\033[0m'  # No Color
 
+
 def print_info(message: str):
     print(f"{Colors.GREEN}[AUTO-DETECT]{Colors.NC} {message}")
+
 
 def print_testing(message: str):
     print(f"{Colors.BLUE}[TESTING]{Colors.NC} {message}")
 
+
 def print_result(message: str):
     print(f"{Colors.CYAN}[RESULT]{Colors.NC} {message}")
+
 
 def print_warning(message: str):
     print(f"{Colors.YELLOW}[WARNING]{Colors.NC} {message}")
 
+
 def print_error(message: str):
     print(f"{Colors.RED}[ERROR]{Colors.NC} {message}")
+
 
 # mirror sources configuration
 APT_MIRRORS = {
@@ -58,6 +66,7 @@ PIP_MIRRORS = {
     "douban": "pypi.douban.com",
 }
 
+
 class MirrorDetector:
     def __init__(self):
         self.arch = self._get_architecture()
@@ -71,7 +80,7 @@ class MirrorDetector:
         """get system architecture"""
         try:
             result = subprocess.run(['dpkg', '--print-architecture'],
-                                  capture_output=True, text=True, check=True)
+                                    capture_output=True, text=True, check=True)
             return result.stdout.strip()
         except (subprocess.CalledProcessError, FileNotFoundError):
             return "amd64"  # default value
@@ -80,7 +89,7 @@ class MirrorDetector:
         """get Ubuntu version code name"""
         try:
             result = subprocess.run(['lsb_release', '-cs'],
-                                  capture_output=True, text=True, check=True)
+                                    capture_output=True, text=True, check=True)
             return result.stdout.strip()
         except (subprocess.CalledProcessError, FileNotFoundError):
             return "jammy"  # default value
