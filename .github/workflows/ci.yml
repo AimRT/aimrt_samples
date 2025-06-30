@@ -18,22 +18,8 @@ jobs:
     with:
       platform: ubuntu-22.04
 
-  check_modified_paths:
-    runs-on: ubuntu-latest
-    needs: check
-    outputs:
-      docs_only_changed: ${{ steps.docs_only_check.outputs.value }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
   build-linux:
     uses: ./.github/workflows/build.yml
-    needs:
-      - check_modified_paths
-    if: needs.check_modified_paths.outputs.docs_only_changed == 'false'
     with:
       run_platform: ${{ matrix.platform }}
       image_name: ${{ matrix.image }}
