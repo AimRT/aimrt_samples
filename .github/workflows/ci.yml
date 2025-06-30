@@ -20,6 +20,7 @@ jobs:
 
   build-linux:
     uses: ./.github/workflows/build.yml
+    needs: check
     with:
       run_platform: ${{ matrix.platform }}
       image_name: ${{ matrix.image }}
