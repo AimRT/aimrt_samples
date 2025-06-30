@@ -50,9 +50,11 @@ cd build
     │   │   └── normal_client_module.h
     │   └── normal_server_module # 服务端模块
     │       ├── CMakeLists.txt
+    │       ├── global.cc
+    │       ├── global.h
     │       ├── normal_server_module.cc
     │       ├── normal_server_module.h
-    │       ├── servicce.cc # 服务端提供的具体服务实现
+    │       ├── service.cc # 服务端提供的具体服务实现
     │       └── service.h
     └── protocols # 协议
         ├── CMakeLists.txt
