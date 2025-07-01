@@ -12,4 +12,4 @@ English | [中文](README.zh_CN.md)
 | :------------------------------- | :------------------------------------------------------------------------------------------------------------- | :----- |
 | [helloworld](./helloworld)       | A simple example demonstrating how to use AimRT framework                                                      | :star: |
 | [my_pb_channel](./my_pb_channel) | A simple example demonstrating publisher-subscriber communication using the Channel API with Protobuf messages | :star: |
-| [my_pb_rpc](./my_pb_rpc)         | A simple example demonstrating publisher-subscriber communication using the Rpc API with Protobuf messages     | :star: |
+| [my_pb_rpc](./my_pb_rpc)         | A simple example demonstrating client-server communication using the Rpc API with Protobuf messages            | :star: |
