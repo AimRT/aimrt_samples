@@ -10,10 +10,10 @@ add_custom_target(
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/install/bin ${CMAKE_BINARY_DIR}
   DEPENDS helloworld_app)
 
-# Install 
+# Install
 if(AIMRT_SAMPLES_INSTALL)
-  install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/install/bin
-          DESTINATION .
-          USE_SOURCE_PERMISSIONS)
+  install(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/install/bin
+    DESTINATION .
+    USE_SOURCE_PERMISSIONS)
 endif()
-  
