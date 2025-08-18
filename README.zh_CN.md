@@ -8,8 +8,9 @@
 
 ## 示例列表
 
-| 示例          | 描述                                                                       | 难度   |
-| :------------ | :------------------------------------------------------------------------- | :----- |
-| helloworld    | 一个简单的示例，展示如何使用 AimRT 框架                                    | :star: |
-| my_pb_channel | 一个简单的示例，展示如何使用 Channel API 和 Protobuf 消息进行发布-订阅通信 | :star: |
-| my_pb_rpc     | 一个简单的示例，展示如何使用 RPC API 和 Protobuf 消息进行客户端-服务器通信 | :star: |
+| 示例                                 | 描述                                                                     | 级别   |
+| :----------------------------------- | :----------------------------------------------------------------------- | :----- |
+| [helloworld](./helloworld)           | 演示如何使用 AimRT 框架的简单示例                                        | :star: |
+| [my_pb_channel](./my_pb_channel)     | 演示使用 Channel API 进行发布者-订阅者通信的简单示例，使用 Protobuf 消息 | :star: |
+| [my_ros2_channel](./my_ros2_channel) | 演示使用 Channel API 进行发布者-订阅者通信的简单示例，使用 ROS2 消息     | :star: |
+| [my_pb_rpc](./my_pb_rpc)             | 演示使用 Rpc API 进行发布者-订阅者通信的简单示例，使用 Protobuf 消息     | :star: |
