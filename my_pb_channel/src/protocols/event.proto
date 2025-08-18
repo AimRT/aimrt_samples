@@ -6,15 +6,15 @@ syntax = "proto3";
 // package name for specifying the namespace for generated code
 package aimrt_samples.protocols;
 
+message Header {
+  uint64 time_stamp = 1;
+  string frame_id = 2;
+  uint64 sequence_num = 3;
+}
+
 // Custom message type,
 // the generated object is aimrt_samples.protocols::EventMsg
 message EventMsg {
   Header header = 1;
   string msg = 2;
-}
-
-message Header {
-  uint64 time_stamp = 1;
-  string frame_id = 2;
-  uint64 sequence_num = 3;
 }

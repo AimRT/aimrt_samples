@@ -1,0 +1,23 @@
+// Copyright (c) 2023, AgiBot Inc.
+// All rights reserved.
+
+syntax = "proto3";
+
+// package name for specifying the namespace for generated code
+package aimrt_samples.protocols;
+
+
+message Header {
+  uint64 time_stamp = 1;
+  string frame_id = 2;
+  uint64 sequence_num = 3;
+}
+
+// 图像消息
+message Image {
+  Header header = 1;        // 图像头部信息
+  uint32 width = 2;         // 图像宽度
+  uint32 height = 3;        // 图像高度
+  uint32 channels = 4;      // 通道数 (1=灰度, 3=BGR/RGB)
+  bytes data = 5;           // 图像数据
+}
