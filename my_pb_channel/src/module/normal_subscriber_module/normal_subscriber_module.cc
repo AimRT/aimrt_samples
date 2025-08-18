@@ -18,7 +18,7 @@ bool NormalSubscriberModule::Initialize(aimrt::CoreRef core) {
       topic_name_ = cfg_node["topic_name"].as<std::string>();
     }
 
-    // Register publish(it contains two steps)
+    // Register subscriber(it contains two steps)
     // Step1: get subscriber handle with topic name
     subscriber_ = core_.GetChannelHandle().GetSubscriber(topic_name_);
     AIMRT_CHECK_ERROR_THROW(subscriber_, "Get subscriber for topic '{}' failed.", topic_name_);
