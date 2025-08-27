@@ -22,7 +22,5 @@ target_link_libraries(
   PRIVATE yaml-cpp::yaml-cpp
   PUBLIC aimrt::interface::aimrt_module_cpp_interface
          aimrt::interface::aimrt_module_ros2_interface
-         my_ros2_msgs::my_ros2_msgs__rosidl_generator_cpp
          my_ros2_msgs::my_ros2_msgs__rosidl_typesupport_cpp
-         my_ros2_msgs::my_ros2_msgs__rosidl_typesupport_fastrtps_cpp
-         my_ros2_msgs::my_ros2_msgs__rosidl_typesupport_introspection_cpp)
+         my_ros2_msgs::my_ros2_msgs__rosidl_typesupport_fastrtps_cpp)
