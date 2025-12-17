@@ -15,5 +15,6 @@
 | [my_pb_channel](./my_pb_channel)     | 演示使用 Channel API 进行发布者-订阅者通信的简单示例，使用 Protobuf 消息 | :star: |
 | [my_ros2_channel](./my_ros2_channel) | 演示使用 Channel API 进行发布者-订阅者通信的简单示例，使用 ROS2 消息     | :star: |
 | [my_pb_rpc](./my_pb_rpc)             | 演示使用 Rpc API 进行发布者-订阅者通信的简单示例，使用 Protobuf 消息     | :star: |
+| [my_ros2_rpc](./my_ros2_rpc)         | 演示使用 Rpc API 进行发布者-订阅者通信的简单示例，使用 ROS2 消息         | :star: |
 
 ## 贡献
