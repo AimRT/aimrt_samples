@@ -1,0 +1,8 @@
+# Request
+float32 num1
+float32 num2
+---
+# Response
+int32 code
+string msg
+float32 sum
