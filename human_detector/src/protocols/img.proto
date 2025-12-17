@@ -1,0 +1,16 @@
+// image_message.proto
+syntax = "proto3";
+
+package custom_protocol.img_msg;
+
+message Header {
+  uint64 time_stamp = 1;
+  uint64 sequence_num = 2;
+}
+
+message Image {
+  Header header = 1;  // 图像头部信息
+  uint32 width = 2;   // 图像宽度
+  uint32 height = 3;  // 图像高度
+  bytes data = 4;     // 图像数据（BGR格式，OpenCV默认）
+}
