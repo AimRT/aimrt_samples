@@ -1,9 +1,9 @@
 // Copyright (c) 2023, AgiBot Inc.
 // All rights reserved.
 
+#include "normal_server_module/service.h"
 #include "aimrt_module_protobuf_interface/util/protobuf_tools.h"
 #include "normal_server_module/global.h"
-#include "normal_server_module/service.h"
 
 aimrt::rpc::Status CalculateServiceImpl::CalculateSum(
     aimrt::rpc::ContextRef ctx,
