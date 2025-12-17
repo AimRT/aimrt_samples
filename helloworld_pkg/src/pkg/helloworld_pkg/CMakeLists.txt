@@ -16,4 +16,3 @@ target_link_libraries(
   ${CUR_TARGET_NAME}
   PRIVATE aimrt::interface::aimrt_pkg_c_interface
           helloworld::helloworld_module)
-
