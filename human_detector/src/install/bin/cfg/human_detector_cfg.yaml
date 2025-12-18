@@ -1,0 +1,27 @@
+# AimRT core configuration
+aimrt:
+  log: # log configuration
+    core_lvl: INFO # core log level, options: Trace/Debug/Info/Warn/Error/Fatal/Off, case-insensitive
+    backends: # log backends
+      - type: console #  print to console
+        options:
+          color: true # colored print
+  executor:
+    executors:
+      - name: work_executor
+        type: simple_thread
+      - name: display_executor
+        type: simple_thread
+  channel:
+    backends:
+      - type: local
+    pub_topics_options:
+      - topic_name: "(.*)"
+        enable_backends: [local]
+    sub_topics_options:
+      - topic_name: "(.*)"
+        enable_backends: [local]
+  module:
+    pkgs:
+      - path: ./libhuman_detector_pkg.so
+        enable_modules: [HumanDetectorModule, HalCameraModule]
