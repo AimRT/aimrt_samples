@@ -9,9 +9,9 @@ aimrt:
   executor:
     executors:
       - name: work_executor
-        type: simple_thread
+        type: asio_thread
       - name: display_executor
-        type: simple_thread
+        type: asio_thread
   channel:
     backends:
       - type: local

@@ -16,10 +16,12 @@ bool HalCameraModule::Initialize(aimrt::CoreRef core) {
     executor_ = core_.GetExecutorManager().GetExecutor("work_executor");
     AIMRT_CHECK_ERROR_THROW(executor_, "Get executor 'work_executor' failed.");
 
+    timer_ = aimrt::executor::CreateTimer(
+        executor_, std::chrono::milliseconds(1000 / 30), [this] { MainTask(); }, false);
+
     // Register publish type
     publisher_ = core_.GetChannelHandle().GetPublisher("/msg/camera");
     AIMRT_CHECK_ERROR_THROW(publisher_, "Get publisher failed.");
-
     bool ret = aimrt::channel::RegisterPublishType<custom_protocol::img_msg::Image>(publisher_);
     AIMRT_CHECK_ERROR_THROW(ret, "Register publish type failed.");
 
@@ -41,53 +43,37 @@ bool HalCameraModule::Initialize(aimrt::CoreRef core) {
 bool HalCameraModule::Start() {
   // Write your runtime logic here
   AIMRT_INFO("Start succeeded.");
-  run_flag_ = true;
-  executor_.Execute(std::bind(&HalCameraModule::MainLoop, this));
+  timer_->Reset();
   return true;
 }
 
 void HalCameraModule::Shutdown() {
   // Write your resource release logic here
   AIMRT_INFO("Shutdown succeeded.");
-  if (run_flag_) {
-    run_flag_ = false;
-    stop_sig_.get_future().wait();
-  }
+  timer_->Cancel();
 }
 
-void HalCameraModule::MainLoop() {
+void HalCameraModule::MainTask() {
   try {
-    AIMRT_INFO("Start MainLoop.");
+    cv::Mat frame;
+    camera_ptr_->read(frame);
 
-    uint32_t count = 0;
-    while (run_flag_) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<uint32_t>(1000 / 30)));
-
-      cv::Mat frame;
-      camera_ptr_->read(frame);
-
-      if (frame.empty()) {
-        continue;
-      }
-
-      custom_protocol::img_msg::Image msg;
-
-      // 图像信息
-      msg.set_width(frame.cols);
-      msg.set_height(frame.rows);
-
-      // 图像数据（OpenCV 默认是 BGR）
-      msg.set_data(frame.data, frame.total() * frame.elemSize());
-      // publish event
-
-      AIMRT_TRACE_INTERVAL(1000, "Publish new pb event, data: {}", aimrt::Pb2CompactJson(msg));
-      aimrt::channel::Publish(publisher_, msg);
+    if (frame.empty()) {
+      return;
     }
 
-    AIMRT_INFO("Exit MainLoop.");
+    custom_protocol::img_msg::Image msg;
+
+    msg.set_width(frame.cols);
+    msg.set_height(frame.rows);
+
+    msg.set_data(frame.data, frame.total() * frame.elemSize());
+
+    // publish event
+    AIMRT_TRACE_INTERVAL(1000, "Publish new pb event, data: {}", aimrt::Pb2CompactJson(msg));
+    aimrt::channel::Publish(publisher_, msg);
+
   } catch (const std::exception& e) {
     AIMRT_ERROR("Exit MainLoop with exception, {}", e.what());
   }
-
-  stop_sig_.set_value();
 }
