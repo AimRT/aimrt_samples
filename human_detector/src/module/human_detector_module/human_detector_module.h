@@ -3,7 +3,7 @@
 #pragma once
 
 #include <opencv2/opencv.hpp>
-#include "aimrt_module_cpp_interface/module_base.h"
+#include "aimrt_module_cpp_interface/aimrt_module_cpp_interface.h"
 #include "img.pb.h"
 
 class HumanDetectorModule : public aimrt::ModuleBase {
@@ -21,21 +21,20 @@ class HumanDetectorModule : public aimrt::ModuleBase {
 
  private:
   auto GetLogger() { return core_.GetLogger(); }
-  void DisplayLoop();
+  void DisplayTask();
   void EventHandle(aimrt::channel::ContextRef ctx,
                    const std::shared_ptr<const custom_protocol::img_msg::Image>& data);
 
  private:
   aimrt::CoreRef core_;
 
-  std::atomic_bool run_flag_ = false;
-  std::promise<void> stop_sig_;
+  aimrt::channel::SubscriberRef subscriber_;
+
+  aimrt::executor::ExecutorRef executor_;
+  std::shared_ptr<aimrt::executor::TimerBase> timer_;
 
   cv::Mat latest_image_;
   std::mutex image_mutex_;
-
-  aimrt::channel::SubscriberRef subscriber_;
-  aimrt::executor::ExecutorRef executor_;
 
   cv::CascadeClassifier face_cascade_;
 };

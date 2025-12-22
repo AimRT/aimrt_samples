@@ -4,7 +4,6 @@
 #include <opencv2/opencv.hpp>
 #include <thread>
 #include "aimrt_module_protobuf_interface/channel/protobuf_channel.h"
-#include "aimrt_module_protobuf_interface/util/protobuf_tools.h"
 
 bool HumanDetectorModule::Initialize(aimrt::CoreRef core) {
   core_ = core;
@@ -24,23 +23,24 @@ bool HumanDetectorModule::Initialize(aimrt::CoreRef core) {
   AIMRT_CHECK_ERROR_THROW(ret, "Subscribe failed.");
 
   executor_ = core_.GetExecutorManager().GetExecutor("display_executor");
-  AIMRT_CHECK_ERROR_THROW(executor_, "Get executor failed.");
+
+  timer_ = aimrt::executor::CreateTimer(
+      executor_, std::chrono::milliseconds(1000 / 30), [this] { DisplayTask(); }, false);
 
   return true;
 }
 
 bool HumanDetectorModule::Start() {
-  run_flag_ = true;
-  executor_.Execute(std::bind(&HumanDetectorModule::DisplayLoop, this));
+  cv::namedWindow("Human Detection", cv::WINDOW_NORMAL);
+  cv::resizeWindow("Human Detection", 300, 300);  // 设置大小
+  timer_->Reset();
   return true;
 }
 
 void HumanDetectorModule::Shutdown() {
-  if (run_flag_) {
-    run_flag_ = false;
-    stop_sig_.get_future().wait();
-  }
   cv::destroyAllWindows();
+  cv::destroyWindow("Human Detection");
+  timer_->Cancel();
 }
 
 void HumanDetectorModule::EventHandle(aimrt::channel::ContextRef ctx,
@@ -71,23 +71,17 @@ void HumanDetectorModule::EventHandle(aimrt::channel::ContextRef ctx,
   }
 }
 
-void HumanDetectorModule::DisplayLoop() {
-  cv::namedWindow("Human Detection", cv::WINDOW_AUTOSIZE);
-
-  while (run_flag_) {
-    cv::Mat display_image;
-    {
-      std::lock_guard<std::mutex> lock(image_mutex_);
-      if (!latest_image_.empty()) {
-        display_image = latest_image_.clone();
-      }
-    }
-
-    if (!display_image.empty()) {
-      cv::imshow("Human Detection", display_image);
+void HumanDetectorModule::DisplayTask() {
+  cv::Mat display_image;
+  {
+    std::lock_guard<std::mutex> lock(image_mutex_);
+    if (!latest_image_.empty()) {
+      display_image = latest_image_.clone();
     }
   }
 
-  cv::destroyWindow("Human Detection");
-  stop_sig_.set_value();
+  if (!display_image.empty()) {
+    cv::imshow("Human Detection", display_image);
+    cv::waitKey(10);
+  }
 }

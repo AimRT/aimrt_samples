@@ -4,7 +4,7 @@
 #pragma once
 
 #include <opencv2/opencv.hpp>
-#include "aimrt_module_cpp_interface/module_base.h"
+#include "aimrt_module_cpp_interface/aimrt_module_cpp_interface.h"
 
 class HalCameraModule : public aimrt::ModuleBase {
  public:
@@ -21,17 +21,15 @@ class HalCameraModule : public aimrt::ModuleBase {
 
  private:
   auto GetLogger() { return core_.GetLogger(); }
-  void MainLoop();
+  void MainTask();
 
  private:
   aimrt::CoreRef core_;
 
-  std::atomic_bool run_flag_ = false;
-  std::promise<void> stop_sig_;
-
   aimrt::channel::PublisherRef publisher_;
 
   aimrt::executor::ExecutorRef executor_;
+  std::shared_ptr<aimrt::executor::TimerBase> timer_;
 
   std::unique_ptr<cv::VideoCapture> camera_ptr_;
 };
