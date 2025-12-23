@@ -8,8 +8,8 @@
 
 class Detector {
  public:
-  Detector();
-  ~Detector();
+  Detector() = default;
+  ~Detector() = default;
 
   bool LoadModel(const std::string& cascade_path);
 
