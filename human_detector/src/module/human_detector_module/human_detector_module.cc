@@ -1,17 +1,10 @@
 #include "human_detector_module/human_detector_module.h"
-#include <atomic>
-#include <mutex>
 #include <opencv2/opencv.hpp>
-#include <thread>
 #include "aimrt_module_protobuf_interface/channel/protobuf_channel.h"
+#include "utils/detector.h"
 
 bool HumanDetectorModule::Initialize(aimrt::CoreRef core) {
   core_ = core;
-
-  if (!face_cascade_.load("./cfg/model/haarcascade_frontalface_default.xml")) {
-    AIMRT_ERROR("Failed to load face cascade: haarcascade_frontalface_default.xml");
-    return false;
-  }
 
   subscriber_ = core_.GetChannelHandle().GetSubscriber("/msg/camera");
   AIMRT_CHECK_ERROR_THROW(subscriber_, "Get subscriber failed.");
@@ -23,65 +16,36 @@ bool HumanDetectorModule::Initialize(aimrt::CoreRef core) {
   AIMRT_CHECK_ERROR_THROW(ret, "Subscribe failed.");
 
   executor_ = core_.GetExecutorManager().GetExecutor("display_executor");
-
   timer_ = aimrt::executor::CreateTimer(
-      executor_, std::chrono::milliseconds(1000 / 30), [this] { DisplayTask(); }, false);
+      executor_, std::chrono::milliseconds(1000 / 30),
+      [this] { detector_.DisplayImage(); }, false);
+
+  // 初始化检测器
+  detector_.LoadModel("./cfg/model/haarcascade_frontalface_default.xml");
+
+  // 初始化可视化窗口
+  detector_.InitializeDisplay("Human Detection", 300, 300);
 
   return true;
 }
 
 bool HumanDetectorModule::Start() {
-  cv::namedWindow("Human Detection", cv::WINDOW_NORMAL);
-  cv::resizeWindow("Human Detection", 300, 300);  // 设置大小
   timer_->Reset();
   return true;
 }
 
 void HumanDetectorModule::Shutdown() {
-  cv::destroyAllWindows();
-  cv::destroyWindow("Human Detection");
   timer_->Cancel();
+  detector_.ShutdownDisplay();
 }
 
-void HumanDetectorModule::EventHandle(aimrt::channel::ContextRef ctx,
-                                      const std::shared_ptr<const custom_protocol::img_msg::Image>& data) {
-  if (!data || data->data().empty()) return;
-
+void HumanDetectorModule::EventHandle(
+    aimrt::channel::ContextRef ctx,
+    const std::shared_ptr<const custom_protocol::img_msg::Image>& data) {
   cv::Mat frame(data->height(), data->width(), CV_8UC3,
-                const_cast<uint8_t*>(reinterpret_cast<const uint8_t*>(data->data().data())));
-  if (frame.empty()) return;
+                const_cast<uint8_t*>(
+                    reinterpret_cast<const uint8_t*>(data->data().data())));
 
-  cv::Mat gray;
-  cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
-  cv::equalizeHist(gray, gray);
-
-  cv::Mat dst;
-  cv::bilateralFilter(gray, dst, 20, 150, 150);
-
-  std::vector<cv::Rect> faces;
-  face_cascade_.detectMultiScale(dst, faces, 1.1, 3, 0, cv::Size(30, 30));
-
-  for (const auto& face : faces) {
-    cv::rectangle(frame, face, cv::Scalar(255, 0, 0), 2);
-  }
-
-  {
-    std::lock_guard<std::mutex> lock(image_mutex_);
-    latest_image_ = frame.clone();
-  }
-}
-
-void HumanDetectorModule::DisplayTask() {
-  cv::Mat display_image;
-  {
-    std::lock_guard<std::mutex> lock(image_mutex_);
-    if (!latest_image_.empty()) {
-      display_image = latest_image_.clone();
-    }
-  }
-
-  if (!display_image.empty()) {
-    cv::imshow("Human Detection", display_image);
-    cv::waitKey(10);
-  }
+  // 使用检测器处理图像
+  detector_.ProcessImage(frame);
 }
