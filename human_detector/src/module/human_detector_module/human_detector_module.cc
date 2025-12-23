@@ -1,7 +1,6 @@
 #include "human_detector_module/human_detector_module.h"
 #include <opencv2/opencv.hpp>
 #include "aimrt_module_protobuf_interface/channel/protobuf_channel.h"
-#include "utils/detector.h"
 
 bool HumanDetectorModule::Initialize(aimrt::CoreRef core) {
   core_ = core;
@@ -20,11 +19,11 @@ bool HumanDetectorModule::Initialize(aimrt::CoreRef core) {
       executor_, std::chrono::milliseconds(1000 / 30),
       [this] { detector_.DisplayImage(); }, false);
 
-  // 初始化检测器
+  // initial detector
   detector_.LoadModel("./cfg/model/haarcascade_frontalface_default.xml");
 
-  // 初始化可视化窗口
-  detector_.InitializeDisplay("Human Detection", 300, 300);
+  // initial display window
+  detector_.InitializeDisplay("Human Detection", 320, 240);
 
   return true;
 }
@@ -46,6 +45,5 @@ void HumanDetectorModule::EventHandle(
                 const_cast<uint8_t*>(
                     reinterpret_cast<const uint8_t*>(data->data().data())));
 
-  // 使用检测器处理图像
   detector_.ProcessImage(frame);
 }

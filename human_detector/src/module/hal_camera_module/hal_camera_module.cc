@@ -16,19 +16,18 @@ bool HalCameraModule::Initialize(aimrt::CoreRef core) {
     executor_ = core_.GetExecutorManager().GetExecutor("work_executor");
     AIMRT_CHECK_ERROR_THROW(executor_, "Get executor 'work_executor' failed.");
 
-    timer_ = aimrt::executor::CreateTimer(
-        executor_, std::chrono::milliseconds(1000 / 30), [this] { MainTask(); }, false);
-
     // Register publish type
     publisher_ = core_.GetChannelHandle().GetPublisher("/msg/camera");
     AIMRT_CHECK_ERROR_THROW(publisher_, "Get publisher failed.");
     bool ret = aimrt::channel::RegisterPublishType<custom_protocol::img_msg::Image>(publisher_);
     AIMRT_CHECK_ERROR_THROW(ret, "Register publish type failed.");
 
-    camera_ptr_ = std::make_unique<cv::VideoCapture>(0);  // 0 表示默认摄像头
+    camera_ptr_ = std::make_unique<cv::VideoCapture>(0);
     if (!camera_ptr_->isOpened()) {
       AIMRT_ERROR("Open camera failed.");
     }
+    camera_ptr_->set(cv::CAP_PROP_FRAME_WIDTH, 640);
+    camera_ptr_->set(cv::CAP_PROP_FRAME_HEIGHT, 480);
 
   } catch (const std::exception& e) {
     AIMRT_ERROR("Init failed, {}", e.what());
@@ -43,37 +42,44 @@ bool HalCameraModule::Initialize(aimrt::CoreRef core) {
 bool HalCameraModule::Start() {
   // Write your runtime logic here
   AIMRT_INFO("Start succeeded.");
-  timer_->Reset();
+  run_flag_ = true;
+  executor_.Execute(std::bind(&HalCameraModule::MainLoop, this));
   return true;
 }
 
 void HalCameraModule::Shutdown() {
   // Write your resource release logic here
   AIMRT_INFO("Shutdown succeeded.");
-  timer_->Cancel();
+  if (run_flag_) {
+    run_flag_ = false;
+    stop_sig_.get_future().wait();
+  }
+  camera_ptr_->release();
 }
 
-void HalCameraModule::MainTask() {
+void HalCameraModule::MainLoop() {
   try {
-    cv::Mat frame;
-    camera_ptr_->read(frame);
+    while (run_flag_) {
+      cv::Mat frame;
+      camera_ptr_->read(frame);
 
-    if (frame.empty()) {
-      return;
+      if (frame.empty()) {
+        continue;
+      }
+
+      custom_protocol::img_msg::Image msg;
+
+      msg.set_width(frame.cols);
+      msg.set_height(frame.rows);
+      msg.set_data(frame.data, frame.total() * frame.elemSize());
+
+      // publish event
+      aimrt::channel::Publish(publisher_, msg);
     }
-
-    custom_protocol::img_msg::Image msg;
-
-    msg.set_width(frame.cols);
-    msg.set_height(frame.rows);
-
-    msg.set_data(frame.data, frame.total() * frame.elemSize());
-
-    // publish event
-    AIMRT_TRACE_INTERVAL(1000, "Publish new pb event, data: {}", aimrt::Pb2CompactJson(msg));
-    aimrt::channel::Publish(publisher_, msg);
 
   } catch (const std::exception& e) {
     AIMRT_ERROR("Exit MainLoop with exception, {}", e.what());
   }
+
+  stop_sig_.set_value();
 }

@@ -3,8 +3,8 @@
 #pragma once
 
 #include "aimrt_module_cpp_interface/aimrt_module_cpp_interface.h"
+#include "human_detector_module/utils/detector.h"
 #include "img.pb.h"
-#include "utils/detector.h"  // 添加 Detector 类的包含
 
 class HumanDetectorModule : public aimrt::ModuleBase {
  public:
