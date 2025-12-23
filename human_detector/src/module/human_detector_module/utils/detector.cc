@@ -1,4 +1,4 @@
-#include "detector.h"
+#include "human_detector_module/utils/detector.h"
 
 bool Detector::LoadModel(const std::string& cascade_path) {
   return face_cascade_.load(cascade_path);
@@ -43,10 +43,15 @@ bool Detector::InitializeDisplay(const std::string& window_name, int width, int 
 
 void Detector::DisplayImage() {
   cv::Mat display_image;
+
   {
     std::lock_guard<std::mutex> lock(image_mutex_);
+    if (latest_image_.empty()) {
+      return;
+    }
     display_image = latest_image_.clone();
   }
+
   cv::imshow(window_name_, display_image);
   cv::waitKey(10);
 }
