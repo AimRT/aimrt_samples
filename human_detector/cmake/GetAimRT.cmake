@@ -6,7 +6,7 @@ include(FetchContent)
 message(STATUS "get aimrt ...")
 
 set(aimrt_DOWNLOAD_URL
-    "https://github.com/AimRT/AimRT/archive/refs/tags/v1.2.0.tar.gz"
+    "https://github.com/AimRT/AimRT/archive/refs/tags/v1.4.0.tar.gz"
     CACHE STRING "")
 
 if(aimrt_LOCAL_SOURCE)
@@ -27,7 +27,8 @@ function(get_aimrt)
   FetchContent_GetProperties(aimrt)
   if(NOT aimrt_POPULATED)
     set(AIMRT_BUILD_RUNTIME ON)
-    set(AIMRT_BUILD_WITH_PROTOBUF ON)
+    set(AIMRT_BUILD_WITH_PROTOBUF ON) 
+
 
     FetchContent_MakeAvailable(aimrt)
   endif()

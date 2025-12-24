@@ -20,7 +20,6 @@ class HumanDetectorModule : public aimrt::ModuleBase {
   void Shutdown() override;
 
  private:
-  auto GetLogger() { return core_.GetLogger(); }
   void EventHandle(aimrt::channel::ContextRef ctx,
                    const std::shared_ptr<const custom_protocol::img_msg::Image>& data);
 
