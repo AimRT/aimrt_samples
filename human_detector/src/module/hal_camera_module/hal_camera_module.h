@@ -20,7 +20,6 @@ class HalCameraModule : public aimrt::ModuleBase {
   void Shutdown() override;
 
  private:
-  auto GetLogger() { return core_.GetLogger(); }
   void MainLoop();
 
  private:

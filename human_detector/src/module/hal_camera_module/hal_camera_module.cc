@@ -3,7 +3,6 @@
 
 #include "hal_camera_module/hal_camera_module.h"
 #include "aimrt_module_protobuf_interface/channel/protobuf_channel.h"
-#include "aimrt_module_protobuf_interface/util/protobuf_tools.h"
 #include "img.pb.h"
 #include "yaml-cpp/yaml.h"  // IWYU pragma: keep
 
