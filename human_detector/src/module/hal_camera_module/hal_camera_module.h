@@ -33,4 +33,6 @@ class HalCameraModule : public aimrt::ModuleBase {
   aimrt::executor::ExecutorRef executor_;
 
   std::unique_ptr<cv::VideoCapture> camera_ptr_;
+
+  double freq_ = 10;
 };

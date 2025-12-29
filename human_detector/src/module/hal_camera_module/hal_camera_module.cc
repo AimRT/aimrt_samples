@@ -11,6 +11,12 @@ bool HalCameraModule::Initialize(aimrt::CoreRef core) {
 
   try {
     // Write your other initialization logic here ...
+    // Read cfg
+    auto file_path = core_.GetConfigurator().GetConfigFilePath();
+    if (!file_path.empty()) {
+      YAML::Node cfg_node = YAML::LoadFile(std::string(file_path));
+      freq_ = cfg_node["freq"].as<double>();
+    }
     // Get executor handle
     executor_ = core_.GetExecutorManager().GetExecutor("work_executor");
     AIMRT_CHECK_ERROR_THROW(executor_, "Get executor 'work_executor' failed.");
@@ -74,6 +80,8 @@ void HalCameraModule::MainLoop() {
 
       // publish event
       aimrt::channel::Publish(publisher_, msg);
+
+      std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(1000 / freq_)));
     }
 
   } catch (const std::exception& e) {
