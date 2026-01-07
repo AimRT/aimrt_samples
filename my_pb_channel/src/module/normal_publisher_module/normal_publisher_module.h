@@ -3,10 +3,8 @@
 
 #pragma once
 
-#include <atomic>
-#include <future>
-
-#include "aimrt_module_cpp_interface/module_base.h"
+#include "aimrt_module_cpp_interface/aimrt_module_cpp_interface.h"
+#include "event.pb.h"
 
 class NormalPublisherModule : public aimrt::ModuleBase {
  public:
@@ -14,7 +12,6 @@ class NormalPublisherModule : public aimrt::ModuleBase {
   ~NormalPublisherModule() override = default;
 
   // Override the following functions from ModuleBase
-
   aimrt::ModuleInfo Info() const override {
     return aimrt::ModuleInfo{.name = "NormalPublisherModule"};
   }
@@ -24,18 +21,15 @@ class NormalPublisherModule : public aimrt::ModuleBase {
   void Shutdown() override;
 
  private:
-  auto GetLogger() { return core_.GetLogger(); }
-
   void MainLoop();
 
  private:
-  aimrt::CoreRef core_;
-  aimrt::executor::ExecutorRef executor_;
+  std::shared_ptr<aimrt::context::Context> ctx_ptr_;
 
-  std::atomic_bool run_flag_ = false;
-  std::promise<void> stop_sig_;
+  aimrt::executor::ExecutorRef executor_;
 
   std::string topic_name_ = "test_topic";
   double channel_frq_ = 0.5;
-  aimrt::channel::PublisherRef publisher_;
+
+  aimrt::context::res::Publisher<aimrt_samples::protocols::EventMsg> publisher_;
 };

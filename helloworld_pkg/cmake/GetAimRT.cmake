@@ -27,10 +27,6 @@ function(get_aimrt)
   FetchContent_GetProperties(aimrt)
   if(NOT aimrt_POPULATED)
     set(AIMRT_BUILD_RUNTIME ON)
-<<<<<<< HEAD
-=======
-    set(AIMRT_BUILD_WITH_PROTOBUF ON)
->>>>>>> 316f0ba (fix)
 
     FetchContent_MakeAvailable(aimrt)
   endif()

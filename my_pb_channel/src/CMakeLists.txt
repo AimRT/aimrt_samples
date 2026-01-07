@@ -6,12 +6,13 @@ add_subdirectory(protocols)
 add_subdirectory(module/normal_publisher_module)
 add_subdirectory(module/normal_subscriber_module)
 
-add_subdirectory(app/my_pb_channel_app)
+add_subdirectory(pkg/my_pb_channel_pkg)
 
 add_custom_target(
   ${PROJECT_NAME}_build_all ALL
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/install/bin ${CMAKE_BINARY_DIR}
-  DEPENDS my_pb_channel_app)
+  DEPENDS aimrt::runtime::main
+          my_pb_channel_pkg)
 
 # Install
 if(AIMRT_SAMPLES_INSTALL)

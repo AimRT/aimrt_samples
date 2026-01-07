@@ -1,3 +1,3 @@
 #!/bin/sh
 
-./helloworld_app ./cfg/helloworld_cfg.yaml
+./aimrt_main --cfg_file_path=./cfg/helloworld_cfg.yaml

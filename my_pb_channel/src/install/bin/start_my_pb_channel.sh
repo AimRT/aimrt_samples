@@ -1,5 +1,4 @@
 #!/bin/sh
 
-cd $(dirname $0)
 
-./my_pb_channel_app ./cfg/my_pb_channel_cfg.yaml
+./aimrt_main --cfg_file_path=./cfg/my_pb_channel_cfg.yaml
