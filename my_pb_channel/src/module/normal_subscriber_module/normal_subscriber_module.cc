@@ -18,22 +18,9 @@ bool NormalSubscriberModule::Initialize(aimrt::CoreRef core) {
       topic_name_ = cfg_node["topic_name"].as<std::string>();
     }
 
-<<<<<<< HEAD
-    // Register subscriber(it contains two steps)
-    // Step1: get subscriber handle with topic name
-    subscriber_ = core_.GetChannelHandle().GetSubscriber(topic_name_);
-    AIMRT_CHECK_ERROR_THROW(subscriber_, "Get subscriber for topic '{}' failed.", topic_name_);
-
-    // Step2: register callback function for subscriber (aimrt_samples::protocols::EventMsg is the message type)
-    bool ret = aimrt::channel::Subscribe<aimrt_samples::protocols::EventMsg>(
-        subscriber_,
-        std::bind(&NormalSubscriberModule::EventHandle, this, std::placeholders::_1, std::placeholders::_2));
-    AIMRT_CHECK_ERROR_THROW(ret, "Subscribe failed.");
-=======
     // Register subscriber
     subscriber_ = ctx_ptr_->CreateSubscriber<aimrt_samples::protocols::EventMsg>(topic_name_,
                                                                                  std::bind(&NormalSubscriberModule::EventHandle, this, std::placeholders::_1, std::placeholders::_2));
->>>>>>> 2b646fd (fix)
 
   } catch (const std::exception& e) {
     AIMRT_ERROR("Init failed, {}", e.what());
