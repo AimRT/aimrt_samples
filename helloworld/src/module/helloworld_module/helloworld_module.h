@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "aimrt_module_cpp_interface/module_base.h"
+#include "aimrt_module_cpp_interface/aimrt_module_cpp_interface.h"
 
 class HelloWorldModule : public aimrt::ModuleBase {
  public:
@@ -19,8 +19,22 @@ class HelloWorldModule : public aimrt::ModuleBase {
   void Shutdown() override;
 
  private:
-  auto GetLogger() { return core_.GetLogger(); }
+  void Task();
+  void LoopTask();
+  aimrt::co::Task<void> CoLoopTask();
 
  private:
-  aimrt::CoreRef core_;
+  std::shared_ptr<aimrt::context::Context> ctx_ptr_;
+
+  std::string param1_;
+  int param2_;
+
+  // 通用执行器
+  aimrt::executor::ExecutorRef executor_;
+
+  // 定时器
+  std::shared_ptr<aimrt::executor::TimerBase> timer_;
+
+  // 协程作用域
+  aimrt::co::AsyncScope scope_;
 };

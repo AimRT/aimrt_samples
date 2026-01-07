@@ -3,12 +3,13 @@
 
 add_subdirectory(module/helloworld_module)
 
-add_subdirectory(app/helloworld_app)
+add_subdirectory(pkg/helloworld_pkg)
 
 add_custom_target(
   ${PROJECT_NAME}_build_all ALL
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/install/bin ${CMAKE_BINARY_DIR}
-  DEPENDS helloworld_app)
+  DEPENDS aimrt::runtime::main
+          helloworld_pkg)
 
 # Install
 if(AIMRT_SAMPLES_INSTALL)

@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "aimrt_module_cpp_interface/module_base.h"
+#include "aimrt_module_cpp_interface/aimrt_module_cpp_interface.h"
 
 #include "event.pb.h"
 
@@ -22,14 +22,12 @@ class NormalSubscriberModule : public aimrt::ModuleBase {
   void Shutdown() override;
 
  private:
-  auto GetLogger() { return core_.GetLogger(); }
-
   void EventHandle(aimrt::channel::ContextRef ctx,
                    const std::shared_ptr<const aimrt_samples::protocols::EventMsg>& data);
 
  private:
-  aimrt::CoreRef core_;
+  std::shared_ptr<aimrt::context::Context> ctx_ptr_;
 
   std::string topic_name_ = "test_topic";
-  aimrt::channel::SubscriberRef subscriber_;
+  aimrt::context::res::Subscriber<aimrt_samples::protocols::EventMsg> subscriber_;
 };

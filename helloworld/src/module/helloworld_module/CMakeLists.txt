@@ -6,7 +6,6 @@ file(GLOB_RECURSE src ${CMAKE_CURRENT_SOURCE_DIR}/*.cc)
 
 # Add target
 add_library(helloworld_module STATIC)
-add_library(helloworld::helloworld_module ALIAS helloworld_module)
 
 # Set source file of target
 target_sources(helloworld_module PRIVATE ${src})

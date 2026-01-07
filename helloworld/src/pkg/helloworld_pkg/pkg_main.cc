@@ -3,6 +3,7 @@
 
 static std::tuple<std::string_view, std::function<aimrt::ModuleBase*()>> aimrt_module_register_array[]{
     // Here register all modules in the package
-    {"HelloWorldModule", []() -> aimrt::ModuleBase* { return new HelloWorldModule(); }}};
+    {"HelloWorldModule", []() -> aimrt::ModuleBase* { return new HelloWorldModule(); }},
+};
 
 AIMRT_PKG_MAIN(aimrt_module_register_array)
