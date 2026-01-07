@@ -27,8 +27,7 @@ function(get_aimrt)
   FetchContent_GetProperties(aimrt)
   if(NOT aimrt_POPULATED)
     set(AIMRT_BUILD_RUNTIME ON)
-    set(AIMRT_BUILD_WITH_PROTOBUF ON) 
-
+    set(AIMRT_BUILD_WITH_PROTOBUF ON)
 
     FetchContent_MakeAvailable(aimrt)
   endif()
