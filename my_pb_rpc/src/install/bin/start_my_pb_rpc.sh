@@ -1,3 +1,3 @@
 #!/bin/sh
 
-./my_pb_rpc_app ./cfg/my_pb_rpc_cfg.yaml
+./aimrt_main --cfg_file_path=./cfg/my_pb_rpc_cfg.yaml

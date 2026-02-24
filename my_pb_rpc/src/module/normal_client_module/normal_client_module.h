@@ -7,7 +7,7 @@
 #include <future>
 #include <memory>
 
-#include "aimrt_module_cpp_interface/module_base.h"
+#include "aimrt_module_cpp_interface/aimrt_module_cpp_interface.h"
 
 #include "rpc.aimrt_rpc.pb.h"
 
@@ -26,18 +26,17 @@ class NormalRpcClientModule : public aimrt::ModuleBase {
   void Shutdown() override;
 
  private:
-  auto GetLogger() { return core_.GetLogger(); }
-
   void MainLoop();
 
  private:
   aimrt::CoreRef core_;
   aimrt::executor::ExecutorRef executor_;
 
-  std::atomic_bool run_flag_ = false;
-  std::promise<void> stop_sig_;
+  std::shared_ptr<aimrt::context::Context> ctx_ptr_;
 
   double rpc_frq_ = 0.5;
 
   std::shared_ptr<aimrt_samples::protocols::CalculationServiceSyncProxy> proxy_;
+
+  aimrt_samples::protocols::CalculationServiceCoClient client_;
 };

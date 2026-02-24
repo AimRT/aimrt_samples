@@ -18,8 +18,10 @@ bool NormalSubscriberModule::Initialize(aimrt::CoreRef core) {
       topic_name_ = cfg_node["topic_name"].as<std::string>();
     }
 
+    executor_ = ctx_ptr_->CreateExecutor("sub_thread_pool");
     // Register subscriber
     subscriber_ = ctx_ptr_->CreateSubscriber<aimrt_samples::protocols::EventMsg>(topic_name_,
+                                                                                 executor_,
                                                                                  std::bind(&NormalSubscriberModule::EventHandle, this, std::placeholders::_1, std::placeholders::_2));
 
   } catch (const std::exception& e) {

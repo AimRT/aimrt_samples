@@ -14,7 +14,8 @@ auto random_int(int min, int max) {
 }
 
 bool NormalRpcClientModule::Initialize(aimrt::CoreRef core) {
-  core_ = core;
+  ctx_ptr_ = std::make_shared<aimrt::context::Context>(core);
+  ctx_ptr_->LetMe();
 
   try {
     // Read cfg
@@ -24,19 +25,11 @@ bool NormalRpcClientModule::Initialize(aimrt::CoreRef core) {
       rpc_frq_ = cfg_node["rpc_frq"].as<double>();
     }
 
-    // Get executor handle with name "work_thread_pool",(it must be registered in aimrt config file)
-    executor_ = core_.GetExecutorManager().GetExecutor("work_thread_pool");
-    AIMRT_CHECK_ERROR_THROW(executor_, "Get executor 'work_thread_pool' failed.");
+    // Get executor
+    executor_ = ctx_ptr_->CreateExecutor("client_thread_pool");
 
-    // Register client(it contains two steps)
-    // Step1: register rpc_handel
-    auto rpc_handle = core_.GetRpcHandle();
-    AIMRT_CHECK_ERROR_THROW(rpc_handle, "Get rpc handle failed.");
-    bool ret = aimrt_samples::protocols::RegisterCalculationServiceClientFunc(rpc_handle);
-    AIMRT_CHECK_ERROR_THROW(ret, "Register client failed.");
-
-    // Step2: register client proxy
-    proxy_ = std::make_shared<aimrt_samples::protocols::CalculationServiceSyncProxy>(rpc_handle);
+    // Register client
+    client_ = ctx_ptr_->CreateClient<aimrt_samples::protocols::CalculationServiceCoClient>();
 
   } catch (const std::exception& e) {
     AIMRT_ERROR("Init failed, {}", e.what());
@@ -50,9 +43,8 @@ bool NormalRpcClientModule::Initialize(aimrt::CoreRef core) {
 
 bool NormalRpcClientModule::Start() {
   try {
-    run_flag_ = true;
     // Start main loop in executor_
-    executor_.Execute(std::bind(&NormalRpcClientModule::MainLoop, this));
+    executor_.Execute([this]() {ctx_ptr_->LetMe();MainLoop(); });
   } catch (const std::exception& e) {
     AIMRT_ERROR("Start failed, {}", e.what());
     return false;
@@ -63,15 +55,7 @@ bool NormalRpcClientModule::Start() {
 }
 
 void NormalRpcClientModule::Shutdown() {
-  try {
-    if (run_flag_) {
-      run_flag_ = false;
-      stop_sig_.get_future().wait();
-    }
-  } catch (const std::exception& e) {
-    AIMRT_ERROR("Shutdown failed, {}", e.what());
-    return;
-  }
+  ctx_ptr_->StopRunning();
 
   AIMRT_INFO("Shutdown succeeded.");
 }
@@ -79,10 +63,8 @@ void NormalRpcClientModule::Shutdown() {
 // Main loop
 void NormalRpcClientModule::MainLoop() {
   try {
-    AIMRT_INFO("Start MainLoop.");
-
     uint32_t count = 0;
-    while (run_flag_) {
+    while (ctx_ptr_->Running()) {
       // Sleep
       std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<uint32_t>(1000 / rpc_frq_)));
 

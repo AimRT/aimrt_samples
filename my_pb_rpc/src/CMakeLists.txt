@@ -6,12 +6,13 @@ add_subdirectory(protocols)
 add_subdirectory(module/normal_client_module)
 add_subdirectory(module/normal_server_module)
 
-add_subdirectory(app/my_pb_rpc_app)
+add_subdirectory(pkg/my_pb_rpc_pkg)
 
 add_custom_target(
   ${PROJECT_NAME}_build_all ALL
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/install/bin ${CMAKE_BINARY_DIR}
-  DEPENDS my_pb_rpc_app)
+  DEPENDS aimrt::runtime::main
+          my_pb_rpc_pkg)
 
 # Install
 if(AIMRT_SAMPLES_INSTALL)

@@ -3,13 +3,12 @@ aimrt:
   log:
     backends:
       - type: console
-
   executor:
     executors:
-      - name: work_thread_pool
+      - name: pub_thread_pool
         type: asio_thread
-        options:
-          thread_num: 2
+      - name: sub_thread_pool
+        type: asio_thread
   channel:
     backends:
       - type: local

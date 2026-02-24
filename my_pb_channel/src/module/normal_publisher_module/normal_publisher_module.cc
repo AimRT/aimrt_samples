@@ -21,7 +21,7 @@ bool NormalPublisherModule::Initialize(aimrt::CoreRef core) {
     }
 
     // Get executor handle with name "work_thread_pool",(it must be registered in aimrt config file)
-    executor_ = ctx_ptr_->CreateExecutor("work_thread_pool");
+    executor_ = ctx_ptr_->CreateExecutor("pub_thread_pool");
 
     // Register publish
     publisher_ = ctx_ptr_->CreatePublisher<aimrt_samples::protocols::EventMsg>(topic_name_);

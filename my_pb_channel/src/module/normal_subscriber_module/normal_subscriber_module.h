@@ -30,4 +30,5 @@ class NormalSubscriberModule : public aimrt::ModuleBase {
 
   std::string topic_name_ = "test_topic";
   aimrt::context::res::Subscriber<aimrt_samples::protocols::EventMsg> subscriber_;
+  aimrt::executor::ExecutorRef executor_;
 };
