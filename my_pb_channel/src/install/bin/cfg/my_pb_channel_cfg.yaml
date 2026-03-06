@@ -25,7 +25,7 @@ aimrt:
 
 NormalPublisherModule:
   topic_name: "example/test_topic"
-  channel_frq: 1
+  channel_frq: 0.2
 
 NormalSubscriberModule:
   topic_name: "example/test_topic"

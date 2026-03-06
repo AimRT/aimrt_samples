@@ -3,10 +3,6 @@
 
 #pragma once
 
-#include <atomic>
-#include <future>
-#include <memory>
-
 #include "aimrt_module_cpp_interface/aimrt_module_cpp_interface.h"
 
 #include "rpc.aimrt_rpc.pb.h"
@@ -26,17 +22,17 @@ class NormalRpcClientModule : public aimrt::ModuleBase {
   void Shutdown() override;
 
  private:
-  void MainLoop();
+  aimrt::co::Task<void> MainLoop();
 
  private:
-  aimrt::CoreRef core_;
-  aimrt::executor::ExecutorRef executor_;
-
   std::shared_ptr<aimrt::context::Context> ctx_ptr_;
 
-  double rpc_frq_ = 0.5;
-
-  std::shared_ptr<aimrt_samples::protocols::CalculationServiceSyncProxy> proxy_;
+  aimrt::executor::ExecutorRef client_executor_;
 
   aimrt_samples::protocols::CalculationServiceCoClient client_;
+
+  // 协程作用域
+  aimrt::co::AsyncScope scope_;
+
+  double rpc_frq_ = 0.5;
 };

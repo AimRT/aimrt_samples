@@ -39,10 +39,10 @@ bool HelloWorldModule::Initialize(aimrt::CoreRef core) {
 bool HelloWorldModule::Start() {
   // Write your runtime logic here
   // use timer
-  timer_->Reset();
+  // timer_->Reset();
 
-  // use executor
-  executor_.Execute([this]() { ctx_ptr_->LetMe(); LoopTask(); });
+  // // use executor
+  // executor_.Execute([this]() { ctx_ptr_->LetMe(); LoopTask(); });
 
   // use co_task
   scope_.spawn(aimrt::co::On(aimrt::co::InlineScheduler(), CoLoopTask()));

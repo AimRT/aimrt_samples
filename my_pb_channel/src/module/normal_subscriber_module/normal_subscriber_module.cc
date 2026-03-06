@@ -11,15 +11,17 @@ bool NormalSubscriberModule::Initialize(aimrt::CoreRef core) {
   ctx_ptr_->LetMe();
 
   try {
-    // Read cfg
+    // 读取模块自定义配置文件，并赋值给成员变量
     auto file_path = ctx_ptr_->GetConfigFilePath();
     if (!file_path.empty()) {
       YAML::Node cfg_node = YAML::LoadFile(std::string(file_path));
       topic_name_ = cfg_node["topic_name"].as<std::string>();
     }
 
+    // 初始化执行器
     executor_ = ctx_ptr_->CreateExecutor("sub_thread_pool");
-    // Register subscriber
+
+    // 初始化订阅者
     subscriber_ = ctx_ptr_->CreateSubscriber<aimrt_samples::protocols::EventMsg>(topic_name_,
                                                                                  executor_,
                                                                                  std::bind(&NormalSubscriberModule::EventHandle, this, std::placeholders::_1, std::placeholders::_2));
@@ -39,5 +41,5 @@ void NormalSubscriberModule::Shutdown() { ctx_ptr_->StopRunning(); }
 void NormalSubscriberModule::EventHandle(
     aimrt::channel::ContextRef ctx,
     const std::shared_ptr<const aimrt_samples::protocols::EventMsg>& data) {
-  AIMRT_INFO("Receive new pb event, ctx: {}, data: {}", ctx.ToString(), aimrt::Pb2CompactJson(*data));
+  AIMRT_INFO("[Subscriber] Receive new pb event, ctx: {}, data: {}", ctx.ToString(), aimrt::Pb2CompactJson(*data));
 }

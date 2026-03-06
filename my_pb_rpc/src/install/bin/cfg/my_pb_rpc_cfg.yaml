@@ -22,9 +22,9 @@ aimrt:
   module:
     pkgs:
       - path: ./libmy_pb_rpc_pkg.so
-        enable_modules: [NormalRpcClientModule, NormalRpcServerModule]
+        enable_modules: [NormalRpcServerModule,NormalRpcClientModule]
 # Custom module configuration
 NormalRpcClientModule:
-  rpc_frq: 1
+  rpc_frq: 0.2
 
 NormalRpcServerModule:

@@ -4,9 +4,8 @@
 #pragma once
 
 #include <memory>
-
-#include "aimrt_module_cpp_interface/module_base.h"
-#include "normal_server_module/service.h"
+#include "aimrt_module_cpp_interface/aimrt_module_cpp_interface.h"
+#include "rpc.aimrt_rpc.pb.h"
 
 class NormalRpcServerModule : public aimrt::ModuleBase {
  public:
@@ -23,8 +22,6 @@ class NormalRpcServerModule : public aimrt::ModuleBase {
   void Shutdown() override;
 
  private:
-  aimrt::CoreRef core_;
-  std::shared_ptr<CalculateServiceImpl> service_ptr_;
-
-  std::string service_name_;
+  std::shared_ptr<aimrt::context::Context> ctx_ptr_;
+  aimrt::executor::ExecutorRef server_executor_;
 };

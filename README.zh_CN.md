@@ -10,10 +10,8 @@
 
 | 示例                                 | 描述                                                                                  | 级别          |
 | :----------------------------------- | :------------------------------------------------------------------------------------ | :------------ |
-| [helloworld](./helloworld)           | 演示如何使用 AimRT 框架的 app 模式的简单示例                                          | :star:        |
-| [helloworld_pkg](./helloworld_pkg)   | 演示如何使用 AimRT 框架的 pkg 模式的简单示例                                          | :star:        |
+| [helloworld](./helloworld)           | 演示如何使用 AimRT 框架的编写一个模块                                              | :star:        |
 | [my_pb_channel](./my_pb_channel)     | 演示使用 Channel API 进行发布者-订阅者通信的简单示例，使用 Protobuf 消息              | :star:        |
 | [my_ros2_channel](./my_ros2_channel) | 演示使用 Channel API 进行发布者-订阅者通信的简单示例，使用 ROS2 消息                  | :star:        |
 | [my_pb_rpc](./my_pb_rpc)             | 演示使用 Rpc API 进行发布者-订阅者通信的简单示例，使用 Protobuf 消息                  | :star:        |
 | [my_ros2_rpc](./my_ros2_rpc)         | 演示使用 Rpc API 进行发布者-订阅者通信的简单示例，使用 ROS2 消息                      | :star:        |
-| [human_detector](./human_detector)   | 演示使用 Channel API 通过发布订阅传输系统摄像头数据，并使用 OpenCV 进行人脸识别的示例 | :star: :star: |

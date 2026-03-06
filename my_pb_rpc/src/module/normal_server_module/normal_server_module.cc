@@ -2,38 +2,34 @@
 // All rights reserved.
 
 #include "normal_server_module/normal_server_module.h"
-#include "normal_server_module/global.h"  // IWYU pragma: keep
-#include "yaml-cpp/yaml.h"                // IWYU pragma: keep
+#include "aimrt_module_protobuf_interface/util/protobuf_tools.h"
+
+#include "yaml-cpp/yaml.h"  // IWYU pragma: keep
 
 bool NormalRpcServerModule::Initialize(aimrt::CoreRef core) {
-  core_ = core;
+  ctx_ptr_ = std::make_shared<aimrt::context::Context>(core);
+  ctx_ptr_->LetMe();
 
-  SetLogger(core_.GetLogger());
+  server_executor_ = ctx_ptr_->CreateExecutor("server_thread_pool");
 
-  try {
-    // Read cfg
-    std::string file_path = std::string(core_.GetConfigurator().GetConfigFilePath());
-    if (!file_path.empty()) {
-      YAML::Node cfg_node = YAML::LoadFile(file_path);
-    }
+  auto server_handle = ctx_ptr_->CreateServer<aimrt_samples::protocols::CalculationServiceCoServer>();
 
-    // Register server
-    service_ptr_ = std::make_shared<CalculateServiceImpl>();
-    bool ret = core_.GetRpcHandle().RegisterService(service_ptr_.get());
-    AIMRT_CHECK_ERROR_THROW(ret, "Register service failed.");
-
-    AIMRT_INFO("Register service succeeded.");
-
-  } catch (const std::exception& e) {
-    AIMRT_ERROR("Init failed, {}", e.what());
-    return false;
-  }
-
-  AIMRT_INFO("Init succeeded.");
+  // 初始化server
+  server_handle->CalculateSum.ServeOn(server_executor_,
+                                      [this](aimrt::rpc::ContextRef ctx, const aimrt_samples::protocols::CalculateSumReq& req, aimrt_samples::protocols::CalculateSumRsp& rsp) {
+                                        ctx_ptr_->LetMe();
+                                        AIMRT_INFO("[Server] Server get req: {}", aimrt::Pb2CompactJson(req));
+                                        rsp.set_sum(req.num1() + req.num2());
+                                        return aimrt::rpc::Status();
+                                      });
 
   return true;
 }
 
-bool NormalRpcServerModule::Start() { return true; }
+bool NormalRpcServerModule::Start() {
+  return true;
+}
 
-void NormalRpcServerModule::Shutdown() {}
+void NormalRpcServerModule::Shutdown() {
+  ctx_ptr_->StopRunning();
+}

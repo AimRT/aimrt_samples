@@ -14,7 +14,7 @@ aimrt:
       - name: work_executor
         type: asio_thread
         options:
-          thread_num: 4
+          thread_num: 1
   module:
     pkgs:
       - path: ./libhelloworld_pkg.so
