@@ -1,0 +1,39 @@
+# AimRT core configuration
+aimrt:
+  plugin:
+    plugins:
+      - name: ros2_plugin
+        path: ./libaimrt_ros2_plugin.so
+        options:
+          node_name: ros2_node
+          executor_type: MultiThreaded # SingleThreaded/StaticSingleThreaded/MultiThreaded/EventsExecutor
+          executor_thread_num: 2
+  log:
+    backends:
+      - type: console
+  executor:
+    executors:
+      - name: pub_thread_pool
+        type: asio_thread
+      - name: sub_thread_pool
+        type: asio_thread
+  channel:
+    backends:
+      - type: ros2
+    pub_topics_options:
+      - topic_name: "(.*)"
+        enable_backends: [ros2]
+    sub_topics_options:
+      - topic_name: "(.*)"
+        enable_backends: [ros2]
+  module:
+    pkgs:
+      - path: ./libmy_pb_channel_pkg.so
+        enable_modules: [NormalPublisherModule, NormalSubscriberModule]
+
+NormalPublisherModule:
+  topic_name: "example/test_topic"
+  channel_frq: 0.2
+
+NormalSubscriberModule:
+  topic_name: "example/test_topic"

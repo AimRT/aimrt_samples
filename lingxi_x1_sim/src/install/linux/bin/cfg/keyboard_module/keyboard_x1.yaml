@@ -1,0 +1,31 @@
+freq: 20 # 数据发布频率，单位：Hz
+
+float_pubs:
+  - topic_name: /idle_mode
+    buttons: [7] # 键盘按键8
+  - topic_name: /zero_mode
+    buttons: [1] # 键盘按键2
+  - topic_name: /stand_mode
+    buttons: [0] # 键盘按键1
+  - topic_name: /walk_mode
+    buttons: [2] # 键盘按键3
+
+# Twist twist
+#         Vector3  linear
+#                 float64 x
+#                 float64 y
+#                 float64 z
+#         Vector3  angular
+#                 float64 x
+#                 float64 y
+#                 float64 z
+twist_pubs:
+  - topic_name: /cmd_vel
+    buttons: [4] # 键盘按键5 作为使能键
+    axis:
+      linear-x: 1 # W/S 前进后退
+      linear-y: 0 # A/D 左右移动
+      angular-z: 3 # Q/E 左右转向
+    # twist的线速度和角速度限制
+    velocity_limit_lb: [-0.5, -0.3, -0.5]
+    velocity_limit_ub: [0.5, 0.3, 0.5]

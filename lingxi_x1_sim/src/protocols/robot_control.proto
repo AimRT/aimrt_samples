@@ -1,0 +1,71 @@
+syntax = "proto3";
+package robot_control;
+
+message RobotState {
+  enum State {
+    IDLE = 0;
+    STAND = 1;
+    ZERO = 2;
+    WALK = 3;
+    KEEP = 4;
+  }
+  
+  State current_state = 1;
+}
+
+message VelocityCommand {
+  double linear_x = 1;
+  double linear_y = 2;
+  double linear_z = 3;
+  double angular_x = 4;
+  double angular_y = 5;
+  double angular_z = 6;
+}
+
+message StateQueryRequest {
+
+}
+
+message StateQueryResponse {
+  RobotState state = 1;
+  uint32 code = 2;     // 返回码（0表示成功）
+  string message = 3;  
+}
+
+message StateSetRequest {
+  RobotState.State target_state = 1;
+}
+
+message StateSetResponse {
+  uint32 code = 1;     // 返回码（0表示成功）
+  string message = 2;  
+}
+
+message VelocitySetRequest {
+  VelocityCommand velocity = 1;
+}
+
+message VelocitySetResponse {
+  uint32 code = 1;     // 返回码（0表示成功）
+  string message = 2;  
+}
+
+message VelocityQueryRequest {
+
+}
+
+message VelocityQueryResponse {
+  VelocityCommand velocity = 1;
+  uint32 code = 2;     // 返回码（0表示成功）
+  string message = 3;  
+}
+
+service RobotControlService {
+  // 状态管理
+  rpc GetState(StateQueryRequest) returns (StateQueryResponse);
+  rpc SetState(StateSetRequest) returns (StateSetResponse);
+  
+  // 速度控制
+  rpc SetVelocity(VelocitySetRequest) returns (VelocitySetResponse);
+  rpc GetVelocity(VelocityQueryRequest) returns (VelocityQueryResponse);  
+}

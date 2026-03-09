@@ -29,6 +29,8 @@ function(get_aimrt)
     set(AIMRT_BUILD_RUNTIME ON)
     set(AIMRT_BUILD_WITH_PROTOBUF ON)
 
+    # set(AIMRT_BUILD_ROS2_PLUGIN ON)
+
     FetchContent_MakeAvailable(aimrt)
   endif()
 endfunction()

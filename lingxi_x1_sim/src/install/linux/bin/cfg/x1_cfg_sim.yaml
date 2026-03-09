@@ -1,0 +1,232 @@
+aimrt:
+  plugin:
+    plugins:
+      - name: ros2_plugin
+        path: ./libaimrt_ros2_plugin.so
+        options:
+          node_name: x1_rl_ctrl_node
+          executor_type: MultiThreaded # SingleThreaded/StaticSingleThreaded/MultiThreaded
+          executor_thread_num: 4
+  log: # 日志配置
+    core_lvl: INFO # Trace/Debug/Info/Warn/Error/Fatal/Off
+    backends:
+      - type: console # 控制台
+      - type: rotate_file # 文件
+        options:
+          path: ./log
+          filename: x1_rl_ctrl.log
+          max_file_size_m: 4
+          max_file_num: 10
+  executor: # 执行器配置
+    executors:
+      - name: rl_control_pub_thread # 创建一个单线程执行器
+        type: asio_thread
+      - name: joy_stick_pub_thread
+        type: asio_thread
+      - name: gui_thread
+        type: asio_thread
+      - name: work_thread_pool
+        type: asio_thread
+        options:
+          thread_num: 4
+
+  channel: # 消息队列相关配置
+    backends: # 消息队列后端配置
+      - type: local
+      - type: ros2
+    pub_topics_options: # 为 publish topic 选择后端
+      - topic_name: "(.*)"
+        enable_backends: [local]
+    sub_topics_options: # 为 subscribe topic 选择后端
+      - topic_name: "(.*)"
+        enable_backends: [local]
+  rpc: # rpc相关配置
+    backends: # rpc后端配置
+      - type: local
+      - type: ros2
+    clients_options: # 为 client 选择后端
+      - func_name: "(.*)"
+        enable_backends: [local]
+    servers_options: # 为 server 选择后端
+      - func_name: "(.*)"
+        enable_backends: [local]
+  module: # 模块配置
+    pkgs: # 要加载的动态库配置
+      - path: ./libmy_robot_pkg.so
+        enable_modules:
+          - KeyboardModule
+          - ControlModule
+      - path: ./libmujoco_sim_pkg.so
+        enable_modules:
+          - MujocoSimModule
+    modules: # 模块
+      - name: KeyboardModule
+        log_lvl: INFO
+        cfg_file_path: ./cfg/keyboard_module/keyboard_x1.yaml
+      - name: ControlModule
+        log_lvl: INFO
+        cfg_file_path: ./cfg/control_module/rl_x1_sim.yaml
+
+# Module custom configuration
+MujocoSimModule:
+  simulation_model_path: ./cfg/model/mjcf/xyber_x1_flat.xml
+  sim_executor: work_thread_pool
+  gui_executor: gui_thread
+
+  subscriber_options:
+    - topic: /joint_cmd
+      type: joint_actuator
+      options:
+        joints:
+          # 躯干关节
+          - name: lumbar_yaw_joint
+            bind_joint: lumbar_yaw_joint
+          - name: lumbar_roll_joint
+            bind_joint: lumbar_roll_joint
+          - name: lumbar_pitch_joint
+            bind_joint: lumbar_pitch_joint
+
+          # 左臂关节
+          - name: left_shoulder_pitch_joint
+            bind_joint: left_shoulder_pitch_joint
+          - name: left_shoulder_roll_joint
+            bind_joint: left_shoulder_roll_joint
+          - name: left_shoulder_yaw_joint
+            bind_joint: left_shoulder_yaw_joint
+          - name: left_elbow_pitch_joint
+            bind_joint: left_elbow_pitch_joint
+          - name: left_elbow_yaw_joint
+            bind_joint: left_elbow_yaw_joint
+          - name: left_wrist_pitch_joint
+            bind_joint: left_wrist_pitch_joint
+          - name: left_wrist_roll_joint
+            bind_joint: left_wrist_roll_joint
+
+          # 右臂关节
+          - name: right_shoulder_pitch_joint
+            bind_joint: right_shoulder_pitch_joint
+          - name: right_shoulder_roll_joint
+            bind_joint: right_shoulder_roll_joint
+          - name: right_shoulder_yaw_joint
+            bind_joint: right_shoulder_yaw_joint
+          - name: right_elbow_pitch_joint
+            bind_joint: right_elbow_pitch_joint
+          - name: right_elbow_yaw_joint
+            bind_joint: right_elbow_yaw_joint
+          - name: right_wrist_pitch_joint
+            bind_joint: right_wrist_pitch_joint
+          - name: right_wrist_roll_joint
+            bind_joint: right_wrist_roll_joint
+
+          # 左腿关节
+          - name: left_hip_pitch_joint
+            bind_joint: left_hip_pitch_joint
+          - name: left_hip_roll_joint
+            bind_joint: left_hip_roll_joint
+          - name: left_hip_yaw_joint
+            bind_joint: left_hip_yaw_joint
+          - name: left_knee_pitch_joint
+            bind_joint: left_knee_pitch_joint
+          - name: left_ankle_pitch_joint
+            bind_joint: left_ankle_pitch_joint
+          - name: left_ankle_roll_joint
+            bind_joint: left_ankle_roll_joint
+
+          # 右腿关节
+          - name: right_hip_pitch_joint
+            bind_joint: right_hip_pitch_joint
+          - name: right_hip_roll_joint
+            bind_joint: right_hip_roll_joint
+          - name: right_hip_yaw_joint
+            bind_joint: right_hip_yaw_joint
+          - name: right_knee_pitch_joint
+            bind_joint: right_knee_pitch_joint
+          - name: right_ankle_pitch_joint
+            bind_joint: right_ankle_pitch_joint
+          - name: right_ankle_roll_joint
+            bind_joint: right_ankle_roll_joint
+
+  publisher_options:
+    - topic: /joint_states
+      frequency: 1000
+      executor: work_thread_pool
+      type: joint_sensor
+      options:
+        joints:
+          # 躯干关节传感器
+          - name: lumbar_yaw_joint
+            bind_joint: lumbar_yaw_joint
+          - name: lumbar_roll_joint
+            bind_joint: lumbar_roll_joint
+          - name: lumbar_pitch_joint
+            bind_joint: lumbar_pitch_joint
+
+          # 左臂关节传感器
+          - name: left_shoulder_pitch_joint
+            bind_joint: left_shoulder_pitch_joint
+          - name: left_shoulder_roll_joint
+            bind_joint: left_shoulder_roll_joint
+          - name: left_shoulder_yaw_joint
+            bind_joint: left_shoulder_yaw_joint
+          - name: left_elbow_pitch_joint
+            bind_joint: left_elbow_pitch_joint
+          - name: left_elbow_yaw_joint
+            bind_joint: left_elbow_yaw_joint
+          - name: left_wrist_pitch_joint
+            bind_joint: left_wrist_pitch_joint
+          - name: left_wrist_roll_joint
+            bind_joint: left_wrist_roll_joint
+
+          # 右臂关节传感器
+          - name: right_shoulder_pitch_joint
+            bind_joint: right_shoulder_pitch_joint
+          - name: right_shoulder_roll_joint
+            bind_joint: right_shoulder_roll_joint
+          - name: right_shoulder_yaw_joint
+            bind_joint: right_shoulder_yaw_joint
+          - name: right_elbow_pitch_joint
+            bind_joint: right_elbow_pitch_joint
+          - name: right_elbow_yaw_joint
+            bind_joint: right_elbow_yaw_joint
+          - name: right_wrist_pitch_joint
+            bind_joint: right_wrist_pitch_joint
+          - name: right_wrist_roll_joint
+            bind_joint: right_wrist_roll_joint
+
+          # 左腿关节传感器
+          - name: left_hip_pitch_joint
+            bind_joint: left_hip_pitch_joint
+          - name: left_hip_roll_joint
+            bind_joint: left_hip_roll_joint
+          - name: left_hip_yaw_joint
+            bind_joint: left_hip_yaw_joint
+          - name: left_knee_pitch_joint
+            bind_joint: left_knee_pitch_joint
+          - name: left_ankle_pitch_joint
+            bind_joint: left_ankle_pitch_joint
+          - name: left_ankle_roll_joint
+            bind_joint: left_ankle_roll_joint
+
+          # 右腿关节传感器
+          - name: right_hip_pitch_joint
+            bind_joint: right_hip_pitch_joint
+          - name: right_hip_roll_joint
+            bind_joint: right_hip_roll_joint
+          - name: right_hip_yaw_joint
+            bind_joint: right_hip_yaw_joint
+          - name: right_knee_pitch_joint
+            bind_joint: right_knee_pitch_joint
+          - name: right_ankle_pitch_joint
+            bind_joint: right_ankle_pitch_joint
+          - name: right_ankle_roll_joint
+            bind_joint: right_ankle_roll_joint
+
+    - topic: /imu/data
+      frequency: 1000
+      executor: work_thread_pool
+      type: imu_sensor_ros2
+      options:
+        bind_site: imu
+        bind_framequat: body-orientation
+        bind_gyro: body-angular-velocity
+        bind_accelerometer: body-linear-acceleration
