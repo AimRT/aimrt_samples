@@ -3,7 +3,7 @@ include(FetchContent)
 message(STATUS "get aimrt mujoco sim ...")
 
 set(aimrt_mujoco_sim_DOWNLOAD_URL
-    "https://github.com/AimRT/aimrt_mujoco_sim/archive/refs/tags/v1.0.1.tar.gz"
+    "https://github.com/AimRT/aimrt_mujoco_sim/archive/refs/tags/v1.0.2.tar.gz"
     CACHE STRING "")
 
 

@@ -30,7 +30,7 @@ target_link_directories(
 
 # Set link libraries of target
 find_package(sensor_msgs)
-find_package(SDL2)
+find_package(SDL2 REQUIRED)
 
 target_link_libraries(
   ${CUR_TARGET_NAME}

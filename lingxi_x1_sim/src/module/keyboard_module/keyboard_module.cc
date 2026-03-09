@@ -85,6 +85,9 @@ void KeyboardModule::MainTask() {
       auto* velocity = req.mutable_velocity();
       velocity->set_linear_x(event.velocity_action->linear_x);
       velocity->set_linear_y(event.velocity_action->linear_y);
+      velocity->set_linear_z(event.velocity_action->linear_z);
+      velocity->set_angular_x(event.velocity_action->angular_x);
+      velocity->set_angular_y(event.velocity_action->angular_y);
       velocity->set_angular_z(event.velocity_action->angular_z);
 
       if (proxy_->SetVelocity(req, rsp).OK() && rsp.code() == 0) {

@@ -16,4 +16,4 @@ English | [中文](README.zh_CN.md)
 | [my_ros2_channel](./my_ros2_channel) | A simple example demonstrating publisher-subscriber communication using Channel API with ROS2 messages     | :star:        |
 | [my_pb_rpc](./my_pb_rpc)             | A simple example demonstrating request-response communication using Rpc API with Protobuf messages         | :star:        |
 | [my_ros2_rpc](./my_ros2_rpc)         | A simple example demonstrating request-response communication using Rpc API with ROS2 messages             | :star:        |
-| [lingxi_x1](./lingxi_x1)             | Demonstrates how to control Lingxi X1 in MuJoCo simulation                                                 | :star: :star: |
+| [lingxi_x1_sim](./lingxi_x1_sim)     | Demonstrates how to control Lingxi X1 in MuJoCo simulation                                                 | :star: :star: |
