@@ -36,11 +36,6 @@ target_link_libraries(
   ${CUR_TARGET_NAME}
   PRIVATE yaml-cpp::yaml-cpp
   PUBLIC aimrt::interface::aimrt_module_cpp_interface
-         aimrt::interface::aimrt_module_ros2_interface
-         sensor_msgs::sensor_msgs__rosidl_generator_cpp
-         sensor_msgs::sensor_msgs__rosidl_typesupport_cpp
-         sensor_msgs::sensor_msgs__rosidl_typesupport_fastrtps_cpp
-         sensor_msgs::sensor_msgs__rosidl_typesupport_introspection_cpp
          robot_control_aimrt_rpc_gencode
          SDL2
          SDL2_ttf

@@ -72,7 +72,7 @@ bool ControlModule::Initialize(aimrt::CoreRef core) {
       });
 
       // imu 信息订阅以及回调绑定
-      imu_data_sub_ = ctx_ptr_->CreateSubscriber<sensor_msgs::msg::Imu>(
+      imu_data_sub_ = ctx_ptr_->CreateSubscriber<aimrt::protocols::sensor::ImuState>(
           imu_topic_, [this](auto&& PH1) { ImuDataCallback(std::forward<decltype(PH1)>(PH1)); });
 
       // 关节状态信息订阅以及回调绑定
@@ -165,7 +165,7 @@ bool ControlModule::JointCmdPublishTask() {
   return true;
 }
 
-void ControlModule::ImuDataCallback(const std::shared_ptr<const sensor_msgs::msg::Imu>& msg) {
+void ControlModule::ImuDataCallback(const std::shared_ptr<const aimrt::protocols::sensor::ImuState>& msg) {
   auto controller_names = state_machine_.GetCurrentControllerNames();
   for (const auto& name : controller_names) {
     controller_map_[name]->SetImuData(*msg);

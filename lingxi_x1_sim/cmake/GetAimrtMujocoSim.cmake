@@ -23,7 +23,7 @@ endif()
 FetchContent_GetProperties(aimrt_mujoco_sim)
 if(NOT aimrt_mujoco_sim_POPULATED)
 
-  set(AIMRT_MUJOCO_SIM_BUILD_WITH_ROS2 ON )
+  set(AIMRT_MUJOCO_SIM_BUILD_WITH_ROS2 OFF )
 
   FetchContent_MakeAvailable(aimrt_mujoco_sim)
 endif()

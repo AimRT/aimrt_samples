@@ -47,13 +47,13 @@ if(NOT aimrt_POPULATED)
       OFF
       CACHE BOOL "")
   set(AIMRT_BUILD_WITH_ROS2
-      ON
+      OFF
       CACHE BOOL "")
   set(AIMRT_BUILD_NET_PLUGIN
       OFF
       CACHE BOOL "")
   set(AIMRT_BUILD_ROS2_PLUGIN
-      ON
+      OFF
       CACHE BOOL "")
   set(AIMRT_BUILD_MQTT_PLUGIN
       OFF

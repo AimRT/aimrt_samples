@@ -9,7 +9,7 @@ void ControllerBase::SetTarget(const robot_control::VelocityCommand& joy_data) {
   joy_data_ = joy_data;
 }
 
-void ControllerBase::SetImuData(const sensor_msgs::msg::Imu& imu_data) {
+void ControllerBase::SetImuData(const aimrt::protocols::sensor::ImuState& imu_data) {
   std::lock_guard<std::shared_mutex> lock(imu_mutex_);
   imu_data_ = imu_data;
 }

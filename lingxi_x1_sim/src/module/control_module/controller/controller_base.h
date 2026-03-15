@@ -2,11 +2,11 @@
 #include <yaml-cpp/yaml.h>
 #include <map>
 #include <mutex>
-#include <sensor_msgs/msg/imu.hpp>
 #include <shared_mutex>
 #include <string>
 #include <vector>
 #include "control_module/controller/utilities.h"
+#include "imu.pb.h"
 #include "joint_command.pb.h"
 #include "joint_state.pb.h"
 #include "robot_control.pb.h"
@@ -21,7 +21,7 @@ class ControllerBase {
   virtual void Init(const YAML::Node &cfg_node) = 0;
   virtual void RestartController() = 0;
   virtual void SetTarget(const robot_control::VelocityCommand &joy_data);
-  virtual void SetImuData(const sensor_msgs::msg::Imu &imu_data);
+  virtual void SetImuData(const aimrt::protocols::sensor::ImuState &imu_data);
   virtual void SetJointStateData(
       const aimrt::protocols::sensor::JointStateArray &joint_state_data,
       const std::unordered_map<std::string, int> &joint_state_index_map_);
@@ -44,7 +44,7 @@ class ControllerBase {
   mutable std::shared_mutex joint_state_mutex_;
 
   robot_control::VelocityCommand joy_data_;
-  sensor_msgs::msg::Imu imu_data_;
+  aimrt::protocols::sensor::ImuState imu_data_;
   aimrt::protocols::sensor::JointStateArray joint_state_data_;
 };
 

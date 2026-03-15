@@ -186,16 +186,16 @@ void RLController::UpdateStateEstimation() {
 
   {
     std::shared_lock<std::shared_mutex> lock(imu_mutex_);
-    propri_.base_ang_vel(0) = imu_data_.angular_velocity.x;
-    propri_.base_ang_vel(1) = imu_data_.angular_velocity.y;
-    propri_.base_ang_vel(2) = imu_data_.angular_velocity.z;
+    propri_.base_ang_vel(0) = imu_data_.angular_velocity().x();
+    propri_.base_ang_vel(1) = imu_data_.angular_velocity().y();
+    propri_.base_ang_vel(2) = imu_data_.angular_velocity().z();
 
     vector3_t gravity_vector(0, 0, -1);
     quaternion_t quat;
-    quat.x() = imu_data_.orientation.x;
-    quat.y() = imu_data_.orientation.y;
-    quat.z() = imu_data_.orientation.z;
-    quat.w() = imu_data_.orientation.w;
+    quat.x() = imu_data_.orientation().x();
+    quat.y() = imu_data_.orientation().y();
+    quat.z() = imu_data_.orientation().z();
+    quat.w() = imu_data_.orientation().w();
     matrix_t inverse_rot = GetRotationMatrixFromZyxEulerAngles(QuatToZyx(quat)).inverse();
     propri_.projected_gravity = inverse_rot * gravity_vector;
     propri_.base_euler_xyz = QuatToXyz(quat);
